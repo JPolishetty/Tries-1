@@ -1,0 +1,65 @@
+class Solution {
+    //using a triNode to store words in dictionary, for every word in sentence, if theres a prefix in trie, replace it
+    class TrieNode{
+        TrieNode children[];
+        boolean isEnd;
+        public TrieNode(){
+            children = new TrieNode[26];
+            isEnd = false;
+        }
+    }
+
+    TrieNode root;
+    public String replaceWords(List<String> dictionary, String sentence) {
+        if(dictionary == null || sentence == null){
+            return null;
+        }
+        root = new TrieNode();
+        //adding dictionary to TrieNode
+        for(String word : dictionary){
+            TrieNode curr = root;
+            int i = 0;
+            while(i < word.length()){
+                char c = word.charAt(i);
+                if(curr.children[c-'a'] == null){
+                    curr.children[c-'a'] = new TrieNode();
+                } 
+                curr = curr.children[c-'a'];
+                i++;
+            }
+            //at the end of word, make isEnd as true
+            curr.isEnd = true;
+        }
+
+        String[] wordArr = sentence.split(" ");
+        StringBuilder result = new StringBuilder();
+        //for each word, if its prefix present in TrieNode, add it to result
+        for(int i = 0; i< wordArr.length; i++){
+            result = result.append(search(wordArr[i])+ " ");
+        }
+        //remove space added at end
+        return result.toString().trim();
+    }
+
+    //search for the prefix of the word, if present return it ot return the word itself
+    public String search(String word){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        TrieNode curr = root;
+        while(i < word.length()){
+            char c = word.charAt(i);
+            if(curr.children[c - 'a'] != null){
+                sb.append(c);
+                curr = curr.children[c - 'a'];
+                if(curr.isEnd){
+                    return sb.toString();
+                }
+            }
+            else{
+                return word;
+            }
+            i++;
+        }
+        return word;
+    }
+}
