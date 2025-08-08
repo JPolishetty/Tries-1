@@ -1,0 +1,73 @@
+class Trie {
+
+//create TrieNode with array of 26 as child for each char and has isEnd indicating end of word 
+    class TrieNode {
+        TrieNode[] child;
+        boolean isEnd;
+        public TrieNode(){
+            child = new TrieNode[26];
+            isEnd = false;
+        }
+    }
+
+    TrieNode root;
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    //for every char, check if child node of that char(c - 'a') is null, then create new 
+    public void insert(String word) {
+        TrieNode curr = root;
+        int i = 0;
+        while(i < word.length()){
+            char c = word.charAt(i);
+            if(curr.child[c-'a'] == null){
+                curr.child[c-'a'] = new TrieNode();
+            } 
+            curr = curr.child[c-'a'];
+            i++;
+        }
+        //at the end of word, make isEnd as true
+        curr.isEnd = true;
+    }
+    
+    //search each char in child[c - 'a']
+    public boolean search(String word) {
+        TrieNode curr = root;
+        int i = 0;
+        while(i < word.length()){
+            char c = word.charAt(i);
+            if(curr.child[c-'a'] == null){
+                return false;
+            } 
+            curr = curr.child[c-'a'];
+            i++;
+        }
+        //at last char is isEnd is true, return true
+        return curr.isEnd;
+    }
+    
+    //search for the prefix
+    public boolean startsWith(String prefix) {
+        TrieNode curr = root;
+        int i = 0;
+        while(i < prefix.length()){
+            char c = prefix.charAt(i);
+            if(curr.child[c-'a'] == null){
+                return false;
+            } 
+            curr = curr.child[c-'a'];
+            i++;
+        }
+        //return true at the end char
+        return true;
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */
